@@ -12,4 +12,7 @@ public class UCDEventManager : MonoBehaviour
     static public VoidDelegate moveStartDelegate;
     static public VoidDelegate moveEndDelegate;
 
+
+    //call when editor color change
+    static public VoidDelegate blockSetColorDelegate;
 }

@@ -17,6 +17,7 @@ public class UCDParser
         bool isPosX = true;
         int posX = 0;
         int posY = 0;
+        int exitIdx = 0;
         for (int i = 0; i < lines.Length; i++)
         {
             if (lines[i] == "") 
@@ -28,12 +29,11 @@ public class UCDParser
                 if (lines[i] == "#END")
                 {
                     ret.Add(new UCDStageData(stage));
-                    stage.Clear();
+                    stage.Reset();
                     itemCounter = 0;
                 }
                 continue;
             }
-
             if (itemCounter < UCDStageData.HEADER_COUNT) 
             {
                 switch (itemCounter)
@@ -56,21 +56,29 @@ public class UCDParser
                         break;
                 }
             }
-            else
+            else if (itemCounter < UCDStageData.HEADER_COUNT + stage.blockCount)
             {
                 if (isPosX)
                 {
                     posX = int.Parse(lines[i]);
                     isPosX = false;
+                    itemCounter--;
                 }
                 else
                 {
                     posY = int.Parse(lines[i]);
-                    stage.blocksPos.Add(new Vector2(posX, posY));
+                    stage.blocksPos.Add(new Vector2Int(posX, posY));
                     posX = posY = 0;
                     isPosX = true;
                 }
             }
+            else if (itemCounter < UCDStageData.HEADER_COUNT + stage.blockCount + UCDStageData.EXIT_COUNT)
+            {
+                exitIdx = int.Parse(lines[i]);
+                stage.exitPosXorZ.Add(exitIdx);
+                exitIdx = 0;
+            }
+
             itemCounter++;
         }
         return ret;

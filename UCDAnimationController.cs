@@ -16,7 +16,6 @@ public class UCDAnimationController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //isMove = UCDInputManager.moveIsBlocked;
         this.animator.SetBool("isMove", this.isMove);
     }
     void SetMoveTrue()
