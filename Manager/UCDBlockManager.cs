@@ -14,6 +14,7 @@ public class UCDBlockManager : MonoBehaviour
     public GameObject blockPrefab;
     public List<UCDBlock> blocks;
     public List<UCDBlock> walls;
+    public List<UCDBlock> exitWall;
     public TextAsset stageDataCSV;
     private List<UCDStageData> stageData;
 
@@ -23,7 +24,6 @@ public class UCDBlockManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
         for (int i = 0; i < MAX_BLOCK_NUMBER; i++) 
         {
             UCDBlock temp = GameObject.Instantiate(this.blockPrefab).GetComponent<UCDBlock>();
@@ -34,12 +34,8 @@ public class UCDBlockManager : MonoBehaviour
                 this.blocks.Add(temp);
             }
         }
-        
         this.stageData = UCDParser.LoadStageData(this.stageDataCSV);
-        
         SetBlocks();
-
-
         for (int i = 0; i < WALL_BLOCK_NUMBER; i++)
         {
             UCDBlock temp = GameObject.Instantiate(this.blockPrefab).GetComponent<UCDBlock>();
@@ -89,55 +85,71 @@ public class UCDBlockManager : MonoBehaviour
                 this.blocks[i].ResetBlock();
             }
         }
-        
     }
     private void SetWall()
     {
         int stageIdx = currentStageNumber - 1;
-
         int topExitX = this.stageData[stageIdx].exitPosXorZ[0];
         int botExitX = this.stageData[stageIdx].exitPosXorZ[1];
         int leftExitZ = this.stageData[stageIdx].exitPosXorZ[2];
         int rightExitZ = this.stageData[stageIdx].exitPosXorZ[3];
-
-
+        int posX = 0;
+        int posZ = 0;
+        const int HORIZONTAL_OFFSET = 1;
+        const int VERTICAL_OFFSET = 2;
         //Wall make T -> B -> L -> R
-        for (int i = 1; i <= WALL_BLOCK_NUMBER; i++)
+        for (int i = 0; i < WALL_BLOCK_NUMBER; i++)
         {
             if (i < HORIZONTAL_WALL_NUMBER)
             {
-                walls[i].SetPosition(i, RIGHT_TOP_POS);
-                if (i == topExitX)
+                posX = i+ HORIZONTAL_OFFSET;
+                posZ = RIGHT_TOP_POS;
+                if (posX == topExitX)
                 {
-                    walls[i].enabled = false;
+                    this.walls[i].gameObject.SetActive(false);
+                    this.exitWall.Add(this.walls[i]);
                 }
             }
             else if (i < 2 * HORIZONTAL_WALL_NUMBER)
             {
-                walls[i].SetPosition(i, LEFT_BOTTOM_POS);
-                if (i == botExitX)
+                posX = i+ HORIZONTAL_OFFSET - HORIZONTAL_WALL_NUMBER;
+                posZ = LEFT_BOTTOM_POS;
+                if (posX == botExitX)
                 {
-                    walls[i].enabled = false;
+                    this.walls[i].gameObject.SetActive(false);
+                    this.exitWall.Add(this.walls[i]);
                 }
             }
             else if (i < 2 * HORIZONTAL_WALL_NUMBER + VERTICAL_WALL_NUMBER)
             {
-                walls[i].SetPosition(LEFT_BOTTOM_POS, i);
-                if (i == leftExitZ)
+                posX = LEFT_BOTTOM_POS;
+                posZ = i + VERTICAL_OFFSET - 2 * HORIZONTAL_WALL_NUMBER;
+                if (posZ == leftExitZ)
                 {
-                    walls[i].enabled = false;
+                    this.walls[i].gameObject.SetActive(false);
+                    this.exitWall.Add(this.walls[i]);
                 }
             }
             else
             {
-                walls[i].SetPosition(RIGHT_TOP_POS, i);
-                if (i == rightExitZ)
+                posX = RIGHT_TOP_POS;
+                posZ = i + VERTICAL_OFFSET - 2 * HORIZONTAL_WALL_NUMBER - VERTICAL_WALL_NUMBER;
+                if (posZ == rightExitZ)
                 {
-                    walls[i].enabled = false;
+                    this.walls[i].gameObject.SetActive(false);
+                    this.exitWall.Add(this.walls[i]);
                 }
             }
-
+            this.walls[i].SetPosition(posX, posZ);
         }
     }
-        
+    private void ResetExit()
+    {
+        foreach (var item in this.exitWall)
+        {
+            item.gameObject.SetActive(true);
+        }
+        this.exitWall.Clear();
+    }
+
 }
