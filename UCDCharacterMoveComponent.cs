@@ -43,8 +43,12 @@ public class UCDCharacterMoveComponent : MonoBehaviour
 
             if (this.motionLengthSecond < this.elapsedTime)
             {
-                float overTime = elapsedTime - motionLengthSecond;
-                this.transform.position -= this.movingDir * overTime * speedPerSec;
+                Vector3 pos = new Vector3();
+                pos.x = Mathf.Round(this.transform.position.x);
+                pos.z = Mathf.Round(this.transform.position.z);
+                pos.y = this.transform.position.y;
+                this.transform.position = pos;
+                
                 if (this.nextMovingDir == Vector3.zero)
                 {
                     this.isMoving = false;

@@ -37,13 +37,10 @@ public class UCDBlock : MonoBehaviour
     }
     public void SetPosition(float x, float z, float y = 1f)
     {
-        //blocks pivot == center // size 1 => offset 0.5
-        float blockPivotOffset = 0.5f;
-
         this.posX = x;
         this.posY = y;
         this.posZ = z;
-        this.transform.position = new Vector3(this.posX - blockPivotOffset, this.posY, this.posZ - blockPivotOffset);
+        this.transform.position = new Vector3(this.posX, this.posY, this.posZ);
         
     }
 
