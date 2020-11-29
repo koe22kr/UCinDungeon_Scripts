@@ -22,19 +22,19 @@ public class UCDCharacterActionHandler : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        GameObject left = Instantiate(prefab, this.transform);
+        GameObject left = Instantiate(prefab,  transform);
         leftCollider = left.GetComponent<BoxCollider>();
         leftCollider.center = new Vector3(-1f, 0.5f, 0f);
 
-        GameObject right = Instantiate(prefab, this.transform);
+        GameObject right = Instantiate(prefab,  transform);
         rightCollider = right.GetComponent<BoxCollider>();
         rightCollider.center = new Vector3(1f, 0.5f, 0f);
 
-        GameObject forward = Instantiate(prefab, this.transform);
+        GameObject forward = Instantiate(prefab,  transform);
         forwardCollider = forward.GetComponent<BoxCollider>();
         forwardCollider.center = new Vector3(0f, 0.5f, 1f);
 
-        GameObject back = Instantiate(prefab, this.transform);
+        GameObject back = Instantiate(prefab,  transform);
         backCollider = back.GetComponent<BoxCollider>();
         backCollider.center = new Vector3(0f, 0.5f, -1f);
 
@@ -62,19 +62,19 @@ public class UCDCharacterActionHandler : MonoBehaviour
 
         if (dir == Vector3.forward)
         {
-            targetCollider = this.forwardCollider;
+            targetCollider =  forwardCollider;
         }
         else if (dir == Vector3.back)
         {
-            targetCollider = this.backCollider;
+            targetCollider =  backCollider;
         }
         else if (dir == Vector3.left)
         {
-            targetCollider = this.leftCollider;
+            targetCollider =  leftCollider;
         }
         else if (dir == Vector3.right)
         {
-            targetCollider = this.rightCollider;
+            targetCollider =  rightCollider;
         }
         else
         {

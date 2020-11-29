@@ -9,44 +9,66 @@ public class UCDBlock : MonoBehaviour
     public float posY = 0.5f;
     public float posZ = -100f;
     public Color color;
-    
+    private ge.ObjectType type = ge.ObjectType.BLOCK;
     // Start is called before the first frame update
     void Start()
     {
-        this.meshRenderer = GetComponent<MeshRenderer>();
+        meshRenderer = GetComponent<MeshRenderer>();
         ////
         float red =Random.Range(0.0f, 1.0f);
         float green = Random.Range(0.0f, 1.0f);
         float blue = Random.Range(0.0f, 1.0f);
-        this.color = new Color(red, green, blue);
-        this.meshRenderer.material.color = color;
+        color = new Color(red, green, blue);
+        meshRenderer.material.color = color;
+
+        
     }
     
     // Update is called once per frame
     void Update()
     {
-        
     }
 
     public void ResetBlock()
     {
-        this.posY = 0.5f;
-        this.posX = posZ = -100;
-        this.transform.position = new Vector3(this.posX, this.posY, this.posZ);
-        
+        posY = 0.5f;
+        posX = posZ = -100;
+        transform.position = new Vector3(posX, posY, posZ);
     }
-    public void SetPosition(float x, float z, float y = 1f)
+    public void SetDestructible(bool flag)
     {
-        this.posX = x;
-        this.posY = y;
-        this.posZ = z;
-        this.transform.position = new Vector3(this.posX, this.posY, this.posZ);
+        if (flag)
+        {
+            type = ge.ObjectType.BLOCK;
+        }
+        else
+        {
+            type = ge.ObjectType.WALL;
+        }
         
     }
-
+    
+    public void SetBlock(float x, float z, float y = 1f)
+    {
+        posX = x;
+        posY = y;
+        posZ = z;
+        transform.position = new Vector3(posX, posY, posZ);
+        UCDEventManager.boardSetObject((int)x, (int)z, type);// x,z is x,y for gameboard.
+    }
+   
     public void SetColor(Color inColor)
     {
-        this.color = inColor;
-        this.meshRenderer.material.color = this.color;
+        color = inColor;
+        meshRenderer.material.color = color;
+    }
+    public void SetExit()
+    {
+        this.gameObject.SetActive(false);
+        type = ge.ObjectType.NONE;
+    }
+    public void ResetExit()
+    {
+        this.gameObject.SetActive(true);
     }
 }

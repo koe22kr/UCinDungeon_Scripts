@@ -13,6 +13,24 @@ public class UCDEventManager : MonoBehaviour
     static public VoidDelegate moveEndDelegate;
 
 
-    //call when editor color change
-    static public VoidDelegate blockSetColorDelegate;
+    //
+    static public VoidDelegate preSettingBlocksDelegate;
+    static public VoidDelegate postSettingBlocksDelegate;
+    static public VoidDelegate blockSettingCompleteDelegate;
+
+    static public VoidDelegate settingPlayerDelegate;
+    static public VoidDelegate playerSettingCompleteDelegate;
+
+    static public VoidDelegate settingEnemyDelegate;
+    static public VoidDelegate enemySettingCompleteDelegate;
+
+    static public VoidDelegate startGameDelegate;
+    //
+    public delegate void BoardSetObjectDelegate(int posX, int posY, ge.ObjectType type);
+    static public BoardSetObjectDelegate boardSetObjectDelegate;
+
+    //
+    public delegate void SetPositionDelegate(int posX, int posY);
+    static public SetPositionDelegate playerSpawnDelegate;
+
 }

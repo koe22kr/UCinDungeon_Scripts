@@ -19,7 +19,7 @@ public class UCDCharacterMoveComponent : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        this.inputManager = GameObject.Find("GameManager").GetComponent<UCDInputManager>();
+        inputManager = GameObject.Find("GameManager").GetComponent<UCDInputManager>();
         UCDEventManager.moveDelegate += SetMove;
 
     }
@@ -33,51 +33,51 @@ public class UCDCharacterMoveComponent : MonoBehaviour
 
     public void Move()
     {
-        if (this.isMoving)
+        if (isMoving)
         {
-            this.elapsedTime += Time.deltaTime;
-            float speedPerSec = this.moveSpeed / this.motionLengthSecond;
+            elapsedTime += Time.deltaTime;
+            float speedPerSec = moveSpeed / motionLengthSecond;
 
-            this.transform.position += this.movingDir * (Time.deltaTime * speedPerSec);
-            this.transform.rotation = Quaternion.LookRotation(this.movingDir);
+            transform.position += movingDir * (Time.deltaTime * speedPerSec);
+            transform.rotation = Quaternion.LookRotation(movingDir);
 
-            if (this.motionLengthSecond < this.elapsedTime)
+            if (motionLengthSecond < elapsedTime)
             {
                 Vector3 pos = new Vector3();
-                pos.x = Mathf.Round(this.transform.position.x);
-                pos.z = Mathf.Round(this.transform.position.z);
-                pos.y = this.transform.position.y;
-                this.transform.position = pos;
+                pos.x = Mathf.Round(transform.position.x);
+                pos.z = Mathf.Round(transform.position.z);
+                pos.y = transform.position.y;
+                transform.position = pos;
                 
-                if (this.nextMovingDir == Vector3.zero)
+                if (nextMovingDir == Vector3.zero)
                 {
-                    this.isMoving = false;
+                    isMoving = false;
                     MoveIsDone();
                 }
                 else
                 {
-                    this.movingDir = this.nextMovingDir;
-                    this.nextMovingDir = Vector3.zero;
+                    movingDir = nextMovingDir;
+                    nextMovingDir = Vector3.zero;
                 }
-                this.elapsedTime = 0f;
+                elapsedTime = 0f;
             }
         }
     }
     public void SetMove(Vector3 moveDir)
     {
-        if (moveDir == Vector3.zero ||  Time.time < this.lastInputTime + this.inputDisableTime)
+        if (moveDir == Vector3.zero ||  Time.time < lastInputTime + inputDisableTime)
         {
             return;
         }
-        if (this.isMoving)
+        if (isMoving)
         {
-            this.nextMovingDir = moveDir;
+            nextMovingDir = moveDir;
             return;
         }
         
-        this.isMoving = true;
-        this.movingDir = moveDir;
-        this.lastInputTime = Time.time;
+        isMoving = true;
+        movingDir = moveDir;
+        lastInputTime = Time.time;
         return;
     }
     public void MoveIsDone()

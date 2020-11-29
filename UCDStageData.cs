@@ -12,26 +12,26 @@ public class UCDStageData
     public List<int> exitPosXorZ;
     public UCDStageData()
     {
-        this.stageNum = 0;
-        this.blockCount = 0;
-        this.blocksPos = new List<Vector2Int>();
-        this.exitPosXorZ = new List<int>();
+        stageNum = 0;
+        blockCount = 0;
+        blocksPos = new List<Vector2Int>();
+        exitPosXorZ = new List<int>();
 
     }
     public UCDStageData(UCDStageData copySrc)
     {
-        this.stageNum = copySrc.stageNum;
-        this.blockCount = copySrc.blockCount;
-        this.blocksPos = new List<Vector2Int>(copySrc.blocksPos);
-        this.exitPosXorZ = new List<int>(copySrc.exitPosXorZ);
+        stageNum = copySrc.stageNum;
+        blockCount = copySrc.blockCount;
+        blocksPos = new List<Vector2Int>(copySrc.blocksPos);
+        exitPosXorZ = new List<int>(copySrc.exitPosXorZ);
 
     }
     public void Reset()
     {
-        this.stageNum = 0;
-        this.blockCount = 0;
-        this.blocksPos.Clear();
-        this.exitPosXorZ.Clear();
+        stageNum = 0;
+        blockCount = 0;
+        blocksPos.Clear();
+        exitPosXorZ.Clear();
 
     }
 }

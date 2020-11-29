@@ -5,7 +5,8 @@ using UnityEngine;
 public class UCDBoxCollider : MonoBehaviour
 {
     BoxCollider boxCollider;
-    private bool isCollide;
+    private bool isCollide;//게임보드 제작후 삭제
+
     public bool Flag
     {
         get

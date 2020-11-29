@@ -14,85 +14,86 @@ public class UCDBlockManager : MonoBehaviour
     public GameObject blockPrefab;
     public List<UCDBlock> blocks;
     public List<UCDBlock> walls;
-    public List<UCDBlock> exitWall;
-    public TextAsset stageDataCSV;
+    public List<UCDBlock> exits;
     private List<UCDStageData> stageData;
 
     private int currentStageNumber = 1; //NotHaveTitle.... Must be Change.
-
  
     // Start is called before the first frame update
     void Start()
     {
-        for (int i = 0; i < MAX_BLOCK_NUMBER; i++) 
-        {
-            UCDBlock temp = GameObject.Instantiate(this.blockPrefab).GetComponent<UCDBlock>();
-
-            if (temp != null)
-            {
-                temp.ResetBlock();
-                this.blocks.Add(temp);
-            }
-        }
-        this.stageData = UCDParser.LoadStageData(this.stageDataCSV);
-        SetBlocks();
-        for (int i = 0; i < WALL_BLOCK_NUMBER; i++)
-        {
-            UCDBlock temp = GameObject.Instantiate(this.blockPrefab).GetComponent<UCDBlock>();
-
-            if (temp != null)
-            {
-                temp.ResetBlock();
-                this.walls.Add(temp);
-            }
-        }
-        SetWall();
+        UCDEventManager.preSettingBlocksDelegate += Setting;
     }
     // Update is called once per frame
     void Update()
     {
-        if (this.blocks.Count != MAX_BLOCK_NUMBER) 
+        if (blocks.Count != MAX_BLOCK_NUMBER) 
         {
-            int count = this.blocks.Count;
+            int count = blocks.Count;
             if (count < MAX_BLOCK_NUMBER)
             {
                 for (int i = 0; i < MAX_BLOCK_NUMBER- count; i++)
                 {
-                    this.blocks.Add(new UCDBlock());
+                    blocks.Add(new UCDBlock());
                 }
             }
             else
             {
                 int removeCount = count - MAX_BLOCK_NUMBER;
-                int idx = this.blocks.Count - 1 - removeCount;
-                this.blocks.RemoveRange(idx, removeCount);
+                int idx = blocks.Count - 1 - removeCount;
+                blocks.RemoveRange(idx, removeCount);
             }
         }
     }
+
+    private void Setting()
+    {
+        for (int i = 0; i < MAX_BLOCK_NUMBER; i++)
+        {
+            UCDBlock temp = GameObject.Instantiate(blockPrefab).GetComponent<UCDBlock>();
+            if (temp != null)
+            {
+                blocks.Add(temp);
+            }
+        }
+        stageData = UCDParser.LoadStageData(stageDataCSV);
+        SetBlocks();
+        for (int i = 0; i < WALL_BLOCK_NUMBER; i++)
+        {
+            UCDBlock temp = GameObject.Instantiate(blockPrefab).GetComponent<UCDBlock>();
+            if (temp != null)
+            {
+                temp.SetDestructible(false);
+                walls.Add(temp);
+            }
+        }
+        SetWall();
+    }
+
     private void SetBlocks()
     {
         int stageIdx = currentStageNumber - 1;
 
         for (int i = 0; i < MAX_BLOCK_NUMBER; i++)
         {
-            if (i < this.stageData[stageIdx].blockCount)
+            if (i < stageData[stageIdx].blockCount)
             {
-                Vector2 pos = this.stageData[stageIdx].blocksPos[i];
-                this.blocks[i].SetPosition(pos.x, pos.y);
+                Vector2 pos = stageData[stageIdx].blocksPos[i];
+                blocks[i].SetBlock(pos.x, pos.y);
             }
             else
             {
-                this.blocks[i].ResetBlock();
+                blocks[i].ResetBlock();
             }
         }
     }
     private void SetWall()
     {
         int stageIdx = currentStageNumber - 1;
-        int topExitX = this.stageData[stageIdx].exitPosXorZ[0];
-        int botExitX = this.stageData[stageIdx].exitPosXorZ[1];
-        int leftExitZ = this.stageData[stageIdx].exitPosXorZ[2];
-        int rightExitZ = this.stageData[stageIdx].exitPosXorZ[3];
+        int topExitX = stageData[stageIdx].exitPosXorZ[0];
+        int botExitX = stageData[stageIdx].exitPosXorZ[1];
+        int leftExitZ = stageData[stageIdx].exitPosXorZ[2];
+        int rightExitZ = stageData[stageIdx].exitPosXorZ[3];
         int posX = 0;
         int posZ = 0;
         const int HORIZONTAL_OFFSET = 1;
@@ -106,8 +107,8 @@ public class UCDBlockManager : MonoBehaviour
                 posZ = RIGHT_TOP_POS;
                 if (posX == topExitX)
                 {
-                    this.walls[i].gameObject.SetActive(false);
-                    this.exitWall.Add(this.walls[i]);
+                    walls[i].SetExit();
+                    exits.Add(walls[i]);
                 }
             }
             else if (i < 2 * HORIZONTAL_WALL_NUMBER)
@@ -116,8 +117,8 @@ public class UCDBlockManager : MonoBehaviour
                 posZ = LEFT_BOTTOM_POS;
                 if (posX == botExitX)
                 {
-                    this.walls[i].gameObject.SetActive(false);
-                    this.exitWall.Add(this.walls[i]);
+                    walls[i].SetExit();
+                    exits.Add(walls[i]);
                 }
             }
             else if (i < 2 * HORIZONTAL_WALL_NUMBER + VERTICAL_WALL_NUMBER)
@@ -126,8 +127,8 @@ public class UCDBlockManager : MonoBehaviour
                 posZ = i + VERTICAL_OFFSET - 2 * HORIZONTAL_WALL_NUMBER;
                 if (posZ == leftExitZ)
                 {
-                    this.walls[i].gameObject.SetActive(false);
-                    this.exitWall.Add(this.walls[i]);
+                    walls[i].SetExit();
+                    exits.Add(walls[i]);
                 }
             }
             else
@@ -136,20 +137,20 @@ public class UCDBlockManager : MonoBehaviour
                 posZ = i + VERTICAL_OFFSET - 2 * HORIZONTAL_WALL_NUMBER - VERTICAL_WALL_NUMBER;
                 if (posZ == rightExitZ)
                 {
-                    this.walls[i].gameObject.SetActive(false);
-                    this.exitWall.Add(this.walls[i]);
+                    walls[i].SetExit();
+                    exits.Add(walls[i]);
                 }
             }
-            this.walls[i].SetPosition(posX, posZ);
+            walls[i].SetBlock(posX, posZ);
         }
     }
-    private void ResetExit()
+    private void ResetExits()
     {
-        foreach (var item in this.exitWall)
+        foreach (var item in exits)
         {
-            item.gameObject.SetActive(true);
+            item.ResetExit();
         }
-        this.exitWall.Clear();
+        exits.Clear();
     }
 
 }

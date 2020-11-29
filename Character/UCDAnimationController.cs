@@ -16,16 +16,16 @@ public class UCDAnimationController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        this.animator.SetBool("isMove", this.isMove);
+        animator.SetBool("isMove", isMove);
     }
     void SetMoveTrue()
     {
-        this.isMove = true;
-        this.animator.SetBool("isMove", this.isMove);
+        isMove = true;
+        animator.SetBool("isMove", isMove);
     }
     void SetMoveFalse()
     {
-        this.isMove = false;
-        this.animator.SetBool("isMove", this.isMove);
+        isMove = false;
+        animator.SetBool("isMove", isMove);
     }
 }
