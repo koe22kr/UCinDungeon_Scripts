@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UCDCharacterActionHandler : MonoBehaviour
+public class UDCharacterActionHandler : MonoBehaviour
 {
     public GameObject prefab;
 

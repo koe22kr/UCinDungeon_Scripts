@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-public class UCDInputManager : MonoBehaviour
+public class UDInputManager : MonoBehaviour
 {
-    UCDEventManager eventManager;
+    UDEventManager eventManager;
 
     [HideInInspector]
     public Vector3 moveDir;
@@ -13,7 +13,7 @@ public class UCDInputManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        eventManager = GetComponent<UCDEventManager>();
+        eventManager = GetComponent<UDEventManager>();
     }
     // Update is called once per frame
     void Update()
@@ -58,8 +58,8 @@ public class UCDInputManager : MonoBehaviour
     void CallMoveDelegate()
     {
 
-        UCDEventManager.moveDelegate.Invoke(moveDir);
-        UCDEventManager.moveStartDelegate.Invoke();
+        UDEventManager.moveDelegate.Invoke(moveDir);
+        UDEventManager.moveStartDelegate.Invoke();
     }
     
 }

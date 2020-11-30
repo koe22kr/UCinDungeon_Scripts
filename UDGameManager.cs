@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UCDGameManager : MonoBehaviour
+public class UDGameManager : MonoBehaviour
 {
     public float blockPlayerSettingTerm = 5;
     public float playerEnemySettingTerm = 2;
@@ -13,9 +13,9 @@ public class UCDGameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        UCDEventManager.blockSettingCompleteDelegate += BlockSettingComplete;
-        UCDEventManager.playerSettingCompleteDelegate += PlayerSettingComplete;
-        UCDEventManager.enemySettingCompleteDelegate += EnemySettingComplete;
+        UDEventManager.blockSettingCompleteDelegate += BlockSettingComplete;
+        UDEventManager.playerSettingCompleteDelegate += PlayerSettingComplete;
+        UDEventManager.enemySettingCompleteDelegate += EnemySettingComplete;
 
     }
     
@@ -35,9 +35,9 @@ public class UCDGameManager : MonoBehaviour
     private IEnumerator SettingCoroutine()
     {
         isBlockSetComplete = false;
-        UCDEventManager.preSettingBlocksDelegate.Invoke();
+        UDEventManager.preSettingBlocksDelegate.Invoke();
         yield return new WaitForSeconds(5);
-        //UCDEventManager.postSettingBlocksDelegate.Invoke();
+        //UDEventManager.postSettingBlocksDelegate.Invoke();
         while (!isBlockSetComplete)
         {
             yield return new WaitForSeconds(1);
@@ -45,7 +45,7 @@ public class UCDGameManager : MonoBehaviour
         yield return new WaitForSeconds(blockPlayerSettingTerm);
 
         isPlayerSetComplete = false;
-        UCDEventManager.settingPlayerDelegate.Invoke();
+        UDEventManager.settingPlayerDelegate.Invoke();
         while (!isPlayerSetComplete)
         {
             yield return new WaitForSeconds(1);
@@ -53,7 +53,7 @@ public class UCDGameManager : MonoBehaviour
         yield return new WaitForSeconds(playerEnemySettingTerm);
 
         isEnemySetComplete = false;
-        UCDEventManager.settingEnemyDelegate.Invoke();
+        UDEventManager.settingEnemyDelegate.Invoke();
         while (!isEnemySetComplete)
         {
             yield return new WaitForSeconds(1);

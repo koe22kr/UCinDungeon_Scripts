@@ -2,17 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UCDFace : MonoBehaviour
+public class CSVData : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public static TextAsset stageData;
     void Start()
     {
-        
     }
-
     // Update is called once per frame
     void Update()
     {
-        
     }
 }

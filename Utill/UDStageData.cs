@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UCDStageData
+public class UDStageData
 {
     public const int HEADER_COUNT = 2;
     public const int EXIT_COUNT = 4;
@@ -10,7 +10,7 @@ public class UCDStageData
     public int blockCount;
     public List<Vector2Int> blocksPos;
     public List<int> exitPosXorZ;
-    public UCDStageData()
+    public UDStageData()
     {
         stageNum = 0;
         blockCount = 0;
@@ -18,7 +18,7 @@ public class UCDStageData
         exitPosXorZ = new List<int>();
 
     }
-    public UCDStageData(UCDStageData copySrc)
+    public UDStageData(UDStageData copySrc)
     {
         stageNum = copySrc.stageNum;
         blockCount = copySrc.blockCount;

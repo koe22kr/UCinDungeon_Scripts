@@ -4,15 +4,15 @@ using UnityEngine;
 
 
 
-public class UCDParser
+public class UDParser
 {
    
-    static public List<UCDStageData> LoadStageData(TextAsset data)
+    static public List<UDStageData> LoadStageData(TextAsset data)
     {
         string srcText = data.text;
         string[] lines = srcText.Split('\n',' ','"',',','\r');
-        List<UCDStageData> ret=new List<UCDStageData>();
-        UCDStageData stage = new UCDStageData();
+        List<UDStageData> ret=new List<UDStageData>();
+        UDStageData stage = new UDStageData();
         int itemCounter = 0;
         bool isPosX = true;
         int posX = 0;
@@ -28,13 +28,13 @@ public class UCDParser
             {
                 if (lines[i] == "#END")
                 {
-                    ret.Add(new UCDStageData(stage));
+                    ret.Add(new UDStageData(stage));
                     stage.Reset();
                     itemCounter = 0;
                 }
                 continue;
             }
-            if (itemCounter < UCDStageData.HEADER_COUNT) 
+            if (itemCounter < UDStageData.HEADER_COUNT) 
             {
                 switch (itemCounter)
                 {
@@ -56,7 +56,7 @@ public class UCDParser
                         break;
                 }
             }
-            else if (itemCounter < UCDStageData.HEADER_COUNT + stage.blockCount)
+            else if (itemCounter < UDStageData.HEADER_COUNT + stage.blockCount)
             {
                 if (isPosX)
                 {
@@ -72,7 +72,7 @@ public class UCDParser
                     isPosX = true;
                 }
             }
-            else if (itemCounter < UCDStageData.HEADER_COUNT + stage.blockCount + UCDStageData.EXIT_COUNT)
+            else if (itemCounter < UDStageData.HEADER_COUNT + stage.blockCount + UDStageData.EXIT_COUNT)
             {
                 exitIdx = int.Parse(lines[i]);
                 stage.exitPosXorZ.Add(exitIdx);

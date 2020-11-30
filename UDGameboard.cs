@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UCDGameboard : MonoBehaviour
+public class UDGameboard : MonoBehaviour
 {
-    public TextAsset stageDataCSV;
 
     public int gameBoardWidth = 10;
     public int gameBoardHeight = 10;
@@ -14,7 +13,7 @@ public class UCDGameboard : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        UCDEventManager.boardSetObjectDelegate += SetObject;
+        UDEventManager.boardSetObjectDelegate += SetObject;
 
         ResetBoard(gameBoardWidth, gameBoardHeight);
     }

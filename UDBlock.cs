@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UCDBlock : MonoBehaviour
+public class UDBlock : MonoBehaviour
 {
     MeshRenderer meshRenderer;
     public float posX = -100f;
@@ -54,7 +54,7 @@ public class UCDBlock : MonoBehaviour
         posY = y;
         posZ = z;
         transform.position = new Vector3(posX, posY, posZ);
-        UCDEventManager.boardSetObject((int)x, (int)z, type);// x,z is x,y for gameboard.
+        UDEventManager.boardSetObjectDelegate((int)x, (int)z, type);// x,z is x,y for gameboard.
     }
    
     public void SetColor(Color inColor)

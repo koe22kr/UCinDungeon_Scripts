@@ -12,7 +12,7 @@ using UnityEngine;
 namespace UnityChan
 {
 
-    public class UCDEyeBlink : MonoBehaviour
+    public class UDEyeBlink : MonoBehaviour
     {
         public bool isActive = true;                //オート目パチ有効
         public SkinnedMeshRenderer faceSkinMesh;    //_faceSkinMeshへの参照

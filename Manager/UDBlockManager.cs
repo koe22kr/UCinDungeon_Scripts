@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UCDBlockManager : MonoBehaviour
+public class UDBlockManager : MonoBehaviour
 {
     public const int MAX_BLOCK_NUMBER = 50;
     public const int WALL_BLOCK_NUMBER = 36;
@@ -12,17 +12,37 @@ public class UCDBlockManager : MonoBehaviour
     public const int RIGHT_TOP_POS = 10;
 
     public GameObject blockPrefab;
-    public List<UCDBlock> blocks;
-    public List<UCDBlock> walls;
-    public List<UCDBlock> exits;
-    private List<UCDStageData> stageData;
+    public List<UDBlock> blocks;
+    public List<UDBlock> walls;
+    public List<UDBlock> exits;
+    private List<UDStageData> stageData;
 
     private int currentStageNumber = 1; //NotHaveTitle.... Must be Change.
  
     // Start is called before the first frame update
     void Start()
     {
-        UCDEventManager.preSettingBlocksDelegate += Setting;
+        UDEventManager.preSettingBlocksDelegate += Setting;
+
+        stageData = UDParser.LoadStageData(CSVData.stageData);
+
+        for (int i = 0; i < MAX_BLOCK_NUMBER; i++)
+        {
+            UDBlock temp = GameObject.Instantiate(blockPrefab).GetComponent<UDBlock>();
+            if (temp != null)
+            {
+                blocks.Add(temp);
+            }
+        }
+        for (int i = 0; i < WALL_BLOCK_NUMBER; i++)
+        {
+            UDBlock temp = GameObject.Instantiate(blockPrefab).GetComponent<UDBlock>();
+            if (temp != null)
+            {
+                temp.SetDestructible(false);
+                walls.Add(temp);
+            }
+        }
     }
     // Update is called once per frame
     void Update()
@@ -34,7 +54,7 @@ public class UCDBlockManager : MonoBehaviour
             {
                 for (int i = 0; i < MAX_BLOCK_NUMBER- count; i++)
                 {
-                    blocks.Add(new UCDBlock());
+                    blocks.Add(new UDBlock());
                 }
             }
             else
@@ -48,26 +68,9 @@ public class UCDBlockManager : MonoBehaviour
 
     private void Setting()
     {
-        for (int i = 0; i < MAX_BLOCK_NUMBER; i++)
-        {
-            UCDBlock temp = GameObject.Instantiate(blockPrefab).GetComponent<UCDBlock>();
-            if (temp != null)
-            {
-                blocks.Add(temp);
-            }
-        }
-        stageData = UCDParser.LoadStageData(stageDataCSV);
+        SetWalls();
         SetBlocks();
-        for (int i = 0; i < WALL_BLOCK_NUMBER; i++)
-        {
-            UCDBlock temp = GameObject.Instantiate(blockPrefab).GetComponent<UCDBlock>();
-            if (temp != null)
-            {
-                temp.SetDestructible(false);
-                walls.Add(temp);
-            }
-        }
-        SetWall();
+        UDEventManager.blockSettingCompleteDelegate.Invoke();
     }
 
     private void SetBlocks()
@@ -87,7 +90,7 @@ public class UCDBlockManager : MonoBehaviour
             }
         }
     }
-    private void SetWall()
+    private void SetWalls()
     {
         int stageIdx = currentStageNumber - 1;
         int topExitX = stageData[stageIdx].exitPosXorZ[0];

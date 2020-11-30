@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-public class UCDEventManager : MonoBehaviour
+public class UDEventManager : MonoBehaviour
 {
 
     public delegate void MoveDelegate(Vector3 vec3);
@@ -26,11 +26,10 @@ public class UCDEventManager : MonoBehaviour
 
     static public VoidDelegate startGameDelegate;
     //
-    public delegate void BoardSetObjectDelegate(int posX, int posY, ge.ObjectType type);
+    public delegate void BoardSetObjectDelegate(int posX, int posZ, ge.ObjectType type);
     static public BoardSetObjectDelegate boardSetObjectDelegate;
 
     //
-    public delegate void SetPositionDelegate(int posX, int posY);
-    static public SetPositionDelegate playerSpawnDelegate;
+    
 
 }

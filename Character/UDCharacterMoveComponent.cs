@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UCDCharacterMoveComponent : MonoBehaviour
+public class UDCharacterMoveComponent : MonoBehaviour
 {
-    private UCDInputManager inputManager;
+    private UDInputManager inputManager;
     private bool isMoving;
     private Vector3 movingDir = Vector3.zero;
     private Vector3 nextMovingDir = Vector3.zero;
@@ -19,11 +19,10 @@ public class UCDCharacterMoveComponent : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        inputManager = GameObject.Find("GameManager").GetComponent<UCDInputManager>();
-        UCDEventManager.moveDelegate += SetMove;
+        inputManager = GameObject.Find("GameManager").GetComponent<UDInputManager>();
+        UDEventManager.moveDelegate += SetMove;
 
     }
-
     // Update is called once per frame
     
     void Update()
@@ -82,6 +81,6 @@ public class UCDCharacterMoveComponent : MonoBehaviour
     }
     public void MoveIsDone()
     {
-        UCDEventManager.moveEndDelegate.Invoke();
+        UDEventManager.moveEndDelegate.Invoke();
     }
 }
