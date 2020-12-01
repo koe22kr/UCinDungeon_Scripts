@@ -13,7 +13,7 @@ public class UDParser
         string[] lines = srcText.Split('\n',' ','"',',','\r');
         List<UDStageData> ret=new List<UDStageData>();
         UDStageData stage = new UDStageData();
-        int itemCounter = 0;
+        int componentCounter = 0;
         bool isPosX = true;
         int posX = 0;
         int posY = 0;
@@ -30,13 +30,13 @@ public class UDParser
                 {
                     ret.Add(new UDStageData(stage));
                     stage.Reset();
-                    itemCounter = 0;
+                    componentCounter = 0;
                 }
                 continue;
             }
-            if (itemCounter < UDStageData.HEADER_COUNT) 
+            if (componentCounter < UDStageData.HEADER_COUNT) 
             {
-                switch (itemCounter)
+                switch (componentCounter)
                 {
                     case 0:
                         {
@@ -49,6 +49,11 @@ public class UDParser
 
                         }
                         break;
+                    case 2:
+                        {
+                            stage.enemyCount = int.Parse(lines[i]);
+                        }
+                        break;
                     default:
                         {
                             Debug.LogWarning("LoadStageData->ItemCounter->switch->default! Counter is Wrong");
@@ -56,13 +61,13 @@ public class UDParser
                         break;
                 }
             }
-            else if (itemCounter < UDStageData.HEADER_COUNT + stage.blockCount)
+            else if (componentCounter < UDStageData.HEADER_COUNT + stage.blockCount)
             {
                 if (isPosX)
                 {
                     posX = int.Parse(lines[i]);
                     isPosX = false;
-                    itemCounter--;
+                    componentCounter--;
                 }
                 else
                 {
@@ -72,14 +77,30 @@ public class UDParser
                     isPosX = true;
                 }
             }
-            else if (itemCounter < UDStageData.HEADER_COUNT + stage.blockCount + UDStageData.EXIT_COUNT)
+            else if (componentCounter < UDStageData.HEADER_COUNT + stage.blockCount + UDStageData.EXIT_COUNT)
             {
                 exitIdx = int.Parse(lines[i]);
                 stage.exitPosXorZ.Add(exitIdx);
                 exitIdx = 0;
             }
+            else if (componentCounter < UDStageData.HEADER_COUNT + stage.blockCount + UDStageData.EXIT_COUNT+ stage.enemyCount)
+            {
+                if (isPosX)
+                {
+                    posX = int.Parse(lines[i]);
+                    isPosX = false;
+                    componentCounter--;
+                }
+                else
+                {
+                    posY = int.Parse(lines[i]);
+                    stage.enemysPos.Add(new Vector2Int(posX, posY));
+                    posX = posY = 0;
+                    isPosX = true;
+                }
+            }
 
-            itemCounter++;
+            componentCounter++;
         }
         return ret;
     }

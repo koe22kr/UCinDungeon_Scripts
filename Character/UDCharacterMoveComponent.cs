@@ -2,26 +2,28 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UDCharacterMoveComponent : MonoBehaviour
+public class UDCharacterMoveComponent : UDActionComponent
 {
-    private UDInputManager inputManager;
+
     private bool isMoving;
     private Vector3 movingDir = Vector3.zero;
     private Vector3 nextMovingDir = Vector3.zero;
     public float moveSpeed = 1;
-    public float motionLengthSecond = 0.8f;
+    public float motionLengthSecond = 0.2f;
     private float elapsedTime;
 
     //
-    public float inputDisableTime = 0.5f;
+    public float inputDisableTime = 0.3f;
     private float lastInputTime = 0;
     //
+
+    private void Awake()
+    {
+        actionType = ge.ActionType.MOVE;
+    }
     // Start is called before the first frame update
     void Start()
     {
-        inputManager = GameObject.Find("GameManager").GetComponent<UDInputManager>();
-        UDEventManager.moveDelegate += SetMove;
-
     }
     // Update is called once per frame
     
@@ -30,7 +32,7 @@ public class UDCharacterMoveComponent : MonoBehaviour
         Move();
     }
 
-    public void Move()
+    private void Move()
     {
         if (isMoving)
         {
@@ -38,7 +40,7 @@ public class UDCharacterMoveComponent : MonoBehaviour
             float speedPerSec = moveSpeed / motionLengthSecond;
 
             transform.position += movingDir * (Time.deltaTime * speedPerSec);
-            transform.rotation = Quaternion.LookRotation(movingDir);
+            
 
             if (motionLengthSecond < elapsedTime)
             {
@@ -62,25 +64,30 @@ public class UDCharacterMoveComponent : MonoBehaviour
             }
         }
     }
-    public void SetMove(Vector3 moveDir)
-    {
-        if (moveDir == Vector3.zero ||  Time.time < lastInputTime + inputDisableTime)
-        {
-            return;
-        }
-        if (isMoving)
-        {
-            nextMovingDir = moveDir;
-            return;
-        }
-        
-        isMoving = true;
-        movingDir = moveDir;
-        lastInputTime = Time.time;
-        return;
-    }
-    public void MoveIsDone()
+
+    private void MoveIsDone()
     {
         UDEventManager.moveEndDelegate.Invoke();
+    }
+
+    public override void Action(Vector3 dir)
+    {
+
+        if (dir == Vector3.zero || Time.time < lastInputTime + inputDisableTime)
+        {
+            return;
+        }
+
+        if (isMoving)
+        {
+            nextMovingDir = dir;
+            return;
+        }
+
+        isMoving = true;
+        movingDir = dir;
+        lastInputTime = Time.time;
+        UDEventManager.moveStartDelegate.Invoke();
+        return;
     }
 }

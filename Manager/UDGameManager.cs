@@ -4,12 +4,30 @@ using UnityEngine;
 
 public class UDGameManager : MonoBehaviour
 {
-    public float blockPlayerSettingTerm = 5;
+    public float blockPlayerSettingTerm = 2;
     public float playerEnemySettingTerm = 2;
     private bool isSetting = false;
     private bool isBlockSetComplete = false;
     private bool isPlayerSetComplete = false;
     private bool isEnemySetComplete = false;
+
+    private static int currentStageNumber = 1; //NotHaveTitle.... Must be Change.
+
+    //return -1 when stagenum wrong.
+    public static int StageNum
+    {
+        get
+        {
+            if (CSVData.stageData.Count < currentStageNumber)
+            {
+                Debug.Log("GameManager.StageNum.get is fail. stageNumber is wrong.");
+                return -1;
+            }
+            return currentStageNumber;
+        }
+    }
+
+    public GameObject settingGameButton;
     // Start is called before the first frame update
     void Start()
     {
@@ -24,19 +42,24 @@ public class UDGameManager : MonoBehaviour
     {
         
     }
+
     public void SettingGame()
     {
-        if (!isSetting)
+        if (0 < StageNum) 
         {
-            isSetting = true;
-            StartCoroutine(SettingCoroutine());
+
+            if (!isSetting)
+            {
+                isSetting = true;
+                StartCoroutine(SettingCoroutine());
+            }
         }
     }
+
     private IEnumerator SettingCoroutine()
     {
         isBlockSetComplete = false;
         UDEventManager.preSettingBlocksDelegate.Invoke();
-        yield return new WaitForSeconds(5);
         //UDEventManager.postSettingBlocksDelegate.Invoke();
         while (!isBlockSetComplete)
         {
@@ -58,15 +81,19 @@ public class UDGameManager : MonoBehaviour
         {
             yield return new WaitForSeconds(1);
         }
+        settingGameButton.SetActive(false);
     }
+
     private void BlockSettingComplete()
     {
         isBlockSetComplete = true;
     }
+
     private void PlayerSettingComplete()
     {
         isPlayerSetComplete = true;
     }
+
     private void EnemySettingComplete()
     {
         isEnemySetComplete = true;

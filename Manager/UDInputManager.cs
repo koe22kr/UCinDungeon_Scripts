@@ -18,10 +18,10 @@ public class UDInputManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Move();
+        MoveInput();
        
     }
-    void Move()
+    void MoveInput()
     {
 
         if (Input.GetButton("Vertical"))
@@ -29,12 +29,12 @@ public class UDInputManager : MonoBehaviour
             if (0 < Input.GetAxis("Vertical"))
             {
                 moveDir = Vector3.forward;
-                CallMoveDelegate();
+                CallMoveInputDelegate();
             }
             else
             {
                 moveDir = Vector3.back;
-                CallMoveDelegate();
+                CallMoveInputDelegate();
             }
         }
         else if (Input.GetButton("Horizontal"))
@@ -42,12 +42,12 @@ public class UDInputManager : MonoBehaviour
             if (0 < Input.GetAxis("Horizontal"))
             {
                 moveDir = Vector3.right;
-                CallMoveDelegate();
+                CallMoveInputDelegate();
             }
             else
             {
                 moveDir = Vector3.left;
-                CallMoveDelegate();
+                CallMoveInputDelegate();
             }
         }
         //else
@@ -55,11 +55,10 @@ public class UDInputManager : MonoBehaviour
         //    moveDir = Vector3.zero;
         //}
     }
-    void CallMoveDelegate()
+    void CallMoveInputDelegate()
     {
 
-        UDEventManager.moveDelegate.Invoke(moveDir);
-        UDEventManager.moveStartDelegate.Invoke();
+        UDEventManager.moveActionDelegate.Invoke(moveDir);
     }
     
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UDCharacterSpawner : MonoBehaviour
+public class UDPlayerSpawner : MonoBehaviour
 {
     public int spawnPosX = 3;
     public int spawnPosZ = 3;
@@ -26,6 +26,7 @@ public class UDCharacterSpawner : MonoBehaviour
         {
             Instantiate(playerPrefab, new Vector3(spawnPosX, fallHeight, spawnPosZ), Quaternion.identity);
             UDEventManager.boardSetObjectDelegate(spawnPosX, spawnPosZ, ge.ObjectType.PLAYER);
+            UDEventManager.playerSettingCompleteDelegate.Invoke();
         }
     }
 }

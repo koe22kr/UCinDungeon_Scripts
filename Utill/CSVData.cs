@@ -4,12 +4,24 @@ using UnityEngine;
 
 public class CSVData : MonoBehaviour
 {
-    public static TextAsset stageData;
+    public TextAsset stageDataCSV;
+    public static List<UDStageData> stageData;
+
+    private void Awake()
+    {
+        LoadStageData();
+    }
     void Start()
     {
     }
+
     // Update is called once per frame
     void Update()
     {
+    }
+
+    public void LoadStageData()
+    {
+        stageData = UDParser.LoadStageData(stageDataCSV);
     }
 }

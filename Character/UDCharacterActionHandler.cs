@@ -4,48 +4,20 @@ using UnityEngine;
 
 public class UDCharacterActionHandler : MonoBehaviour
 {
-    public GameObject prefab;
+    public ge.ObjectType objectType = ge.ObjectType.PLAYER;
+    private UDGameboard gameBoard;
+    //IAction
+    private UDActionComponent normalAttackComponent;
+    private UDActionComponent miningComponent;
+    private UDActionComponent moveComponent;
+    private UDActionComponent rotationComponent;
 
-    BoxCollider forwardCollider;
-    BoxCollider backCollider;
-    BoxCollider leftCollider;
-    BoxCollider rightCollider;
-
-    enum Action
-    {
-        NONE=0,
-        IDLE,
-        ATTACK,
-        MINING,
-        MOVE,
-    }
     // Start is called before the first frame update
     void Start()
     {
-        GameObject left = Instantiate(prefab,  transform);
-        leftCollider = left.GetComponent<BoxCollider>();
-        leftCollider.center = new Vector3(-1f, 0.5f, 0f);
-
-        GameObject right = Instantiate(prefab,  transform);
-        rightCollider = right.GetComponent<BoxCollider>();
-        rightCollider.center = new Vector3(1f, 0.5f, 0f);
-
-        GameObject forward = Instantiate(prefab,  transform);
-        forwardCollider = forward.GetComponent<BoxCollider>();
-        forwardCollider.center = new Vector3(0f, 0.5f, 1f);
-
-        GameObject back = Instantiate(prefab,  transform);
-        backCollider = back.GetComponent<BoxCollider>();
-        backCollider.center = new Vector3(0f, 0.5f, -1f);
-
-
-        //
-        //BoxCollider[] colliders = GetComponents<BoxCollider>();
-        //const int ColliderCount = 4;
-        //if (colliders.Length != ColliderCount)
-        //{
-        //    Debug.Log("BoxCollider count is not 4!");
-        //}
+        SettingComponent();
+        gameBoard = FindObjectOfType<UDGameboard>();
+        UDEventManager.moveActionDelegate += CheckMoveAction;
     }
 
     // Update is called once per frame
@@ -53,37 +25,87 @@ public class UDCharacterActionHandler : MonoBehaviour
     {
     }
 
-
-
-    private void CheckAction(Vector3 dir)
+    private void SettingComponent()
     {
-        
-        BoxCollider targetCollider;
+        UDActionComponent[] components = GetComponents<UDActionComponent>();
+        foreach (var item in components)
+        {
+            switch (item.actionType)
+            {
+                case ge.ActionType.ATTACK:
+                    {
+                        normalAttackComponent = item;
+                    }
+                    break;
+                case ge.ActionType.MINING:
+                    {
+                        miningComponent = item;
+                    }
+                    break;
+                case ge.ActionType.MOVE:
+                    {
+                        moveComponent = item;
+                    }
+                    break;
+                case ge.ActionType.ROTATION:
+                    {
+                        rotationComponent = item;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    private void CheckMoveAction(Vector3 dir)
+    {
+        Vector3 targetPos = this.transform.position + dir;
+        ge.ObjectType targetType = gameBoard.GetObjectType(targetPos.x, targetPos.z);
 
-        if (dir == Vector3.forward)
+        //rotate always
+        rotationComponent.Action(dir);
+        switch (targetType)
         {
-            targetCollider =  forwardCollider;
-        }
-        else if (dir == Vector3.back)
-        {
-            targetCollider =  backCollider;
-        }
-        else if (dir == Vector3.left)
-        {
-            targetCollider =  leftCollider;
-        }
-        else if (dir == Vector3.right)
-        {
-            targetCollider =  rightCollider;
-        }
-        else
-        {
-            Debug.Log("Direction Vector is wrong. in CheckAction");
-            return;
-        }
-        //if (targetCollider.)
-        {
-
+            case ge.ObjectType.NONE:
+                {
+                    //move
+                    if (moveComponent != null)
+                    {
+                        moveComponent.Action(dir);
+                        gameBoard.Move(transform.position, targetPos, objectType);
+                    }
+                }
+                break;
+            case ge.ObjectType.WALL:
+                {
+                    //notting? dont mining ?
+                }
+                break;
+            case ge.ObjectType.BLOCK:
+                {
+                    //mining
+                    if (miningComponent != null)
+                    {
+                        miningComponent.Action(dir);
+                    }
+                }
+                break;
+            case ge.ObjectType.ENEMY:
+                {
+                    //attack
+                    if (normalAttackComponent != null)
+                    {
+                        normalAttackComponent.Action(dir);
+                    }
+                }
+                break;
+            case ge.ObjectType.PLAYER:
+                {
+                    //to multiplay?
+                }
+                break;
+            default:
+                break;
         }
     }
 

@@ -15,16 +15,12 @@ public class UDBlockManager : MonoBehaviour
     public List<UDBlock> blocks;
     public List<UDBlock> walls;
     public List<UDBlock> exits;
-    private List<UDStageData> stageData;
 
-    private int currentStageNumber = 1; //NotHaveTitle.... Must be Change.
  
     // Start is called before the first frame update
     void Start()
     {
         UDEventManager.preSettingBlocksDelegate += Setting;
-
-        stageData = UDParser.LoadStageData(CSVData.stageData);
 
         for (int i = 0; i < MAX_BLOCK_NUMBER; i++)
         {
@@ -75,13 +71,12 @@ public class UDBlockManager : MonoBehaviour
 
     private void SetBlocks()
     {
-        int stageIdx = currentStageNumber - 1;
-
+        int stageIdx = UDGameManager.StageNum - 1;
         for (int i = 0; i < MAX_BLOCK_NUMBER; i++)
         {
-            if (i < stageData[stageIdx].blockCount)
+            if (i < CSVData.stageData[stageIdx].blockCount)
             {
-                Vector2 pos = stageData[stageIdx].blocksPos[i];
+                Vector2 pos = CSVData.stageData[stageIdx].blocksPos[i];
                 blocks[i].SetBlock(pos.x, pos.y);
             }
             else
@@ -92,11 +87,11 @@ public class UDBlockManager : MonoBehaviour
     }
     private void SetWalls()
     {
-        int stageIdx = currentStageNumber - 1;
-        int topExitX = stageData[stageIdx].exitPosXorZ[0];
-        int botExitX = stageData[stageIdx].exitPosXorZ[1];
-        int leftExitZ = stageData[stageIdx].exitPosXorZ[2];
-        int rightExitZ = stageData[stageIdx].exitPosXorZ[3];
+        int stageIdx = UDGameManager.StageNum - 1;
+        int topExitX = CSVData.stageData[stageIdx].exitPosXorZ[0];
+        int botExitX = CSVData.stageData[stageIdx].exitPosXorZ[1];
+        int leftExitZ = CSVData.stageData[stageIdx].exitPosXorZ[2];
+        int rightExitZ = CSVData.stageData[stageIdx].exitPosXorZ[3];
         int posX = 0;
         int posZ = 0;
         const int HORIZONTAL_OFFSET = 1;

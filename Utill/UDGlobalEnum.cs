@@ -13,4 +13,13 @@ namespace ge
         PLAYER,
         NUM,
     }
+
+    public enum ActionType
+    {
+        NONE = 0,
+        ATTACK,
+        MINING,
+        MOVE,
+        ROTATION,
+    };
 }
