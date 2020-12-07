@@ -70,24 +70,26 @@ public class UDCharacterMoveComponent : UDActionComponent
         UDEventManager.moveEndDelegate.Invoke();
     }
 
-    public override void Action(Vector3 dir)
+    public void Action()
     {
-
+        isMoving = true;
+        lastInputTime = Time.time;
+        UDEventManager.moveStartDelegate.Invoke();
+        return;
+    }
+    public bool Check(Vector3 dir)
+    {
         if (dir == Vector3.zero || Time.time < lastInputTime + inputDisableTime)
         {
-            return;
+            return false;
         }
 
         if (isMoving)
         {
             nextMovingDir = dir;
-            return;
+            return false;
         }
-
-        isMoving = true;
         movingDir = dir;
-        lastInputTime = Time.time;
-        UDEventManager.moveStartDelegate.Invoke();
-        return;
+        return true;
     }
 }

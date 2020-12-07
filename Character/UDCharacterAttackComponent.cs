@@ -1,0 +1,86 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class UDCharacterAttackComponent : UDActionComponent
+{
+    private UDGameboard gameBoard;
+    public int attackRange = 2;
+    public int attackWidthInit = 1;
+    public int attackWidthByRange = 0;
+    private bool isAttackOn = false;
+    private List<Vector2> targets;
+    // Start is called before the first frame update
+    private void Awake()
+    {
+        targets = new List<Vector2>();
+        this.actionType = ge.ActionType.TRACE;
+        gameBoard = FindObjectOfType<UDGameboard>();
+    }
+    // Start is called before the first frame update
+    void Start()
+    {
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+    }
+    public void Action()
+    {
+        Debug.Log("FSM_Attack_Action");
+
+        Vector3 pos = transform.position;
+        foreach (var item in targets)
+        {
+            gameBoard.Attack(pos.x, pos.z, item.x, item.y);
+        }
+    }
+
+    public bool Check()
+    {
+        targets.Clear();
+        Debug.Log("FSM_Attack_Check");
+        isAttackOn = false;
+        //공격,
+        Vector3 pos = transform.position;
+        Vector3 forward = transform.rotation * Vector3.forward;
+        Vector3 right = transform.rotation * Vector3.right;
+        forward.y = 0;
+
+        Vector3 StartPos = pos + forward;
+        for (int z = 0; z < attackRange; z++)
+        {
+            int offsetStartToZero = -1;
+            int offset = (int)(attackWidthByRange * z);
+            int halfWidth = attackWidthInit + offsetStartToZero + offset;
+            if (halfWidth < 0)
+            {
+                //do notthing
+            }
+            else
+            {
+                int minWidthPos = -halfWidth;
+                int maxWidthPos = halfWidth;
+                for (int x = minWidthPos; x <= maxWidthPos; x++)
+                {
+                    Vector3 attackPos = StartPos + (forward * z) + (right * x);
+                    UDObject target = gameBoard.GetObject(attackPos.x, attackPos.z);
+
+                    if (gameBoard.IsDamageAble(attackPos.x, attackPos.z))
+                    {
+                        //공 격
+                        targets.Add(new Vector2(attackPos.x, attackPos.z));
+                        if (gameBoard.IsPlayer(attackPos.x, attackPos.z))
+                        {
+                            isAttackOn = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        return isAttackOn;
+    }
+}

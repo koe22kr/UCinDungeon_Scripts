@@ -7,15 +7,13 @@ public class UDCharacterActionHandler : MonoBehaviour
     public ge.ObjectType objectType = ge.ObjectType.PLAYER;
     private UDGameboard gameBoard;
     //IAction
-    private UDActionComponent normalAttackComponent;
-    private UDActionComponent miningComponent;
-    private UDActionComponent moveComponent;
-    private UDActionComponent rotationComponent;
+    public UDCharacterAttackComponent normalAttackComponent;
+    public UDCharacterMoveComponent moveComponent;
+    public UDCharacterRotationComponent rotationComponent;
 
     // Start is called before the first frame update
     void Start()
     {
-        SettingComponent();
         gameBoard = FindObjectOfType<UDGameboard>();
         UDEventManager.moveActionDelegate += CheckMoveAction;
     }
@@ -25,54 +23,26 @@ public class UDCharacterActionHandler : MonoBehaviour
     {
     }
 
-    private void SettingComponent()
-    {
-        UDActionComponent[] components = GetComponents<UDActionComponent>();
-        foreach (var item in components)
-        {
-            switch (item.actionType)
-            {
-                case ge.ActionType.ATTACK:
-                    {
-                        normalAttackComponent = item;
-                    }
-                    break;
-                case ge.ActionType.MINING:
-                    {
-                        miningComponent = item;
-                    }
-                    break;
-                case ge.ActionType.MOVE:
-                    {
-                        moveComponent = item;
-                    }
-                    break;
-                case ge.ActionType.ROTATION:
-                    {
-                        rotationComponent = item;
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
     private void CheckMoveAction(Vector3 dir)
     {
-        Vector3 targetPos = this.transform.position + dir;
-        ge.ObjectType targetType = gameBoard.GetObjectType(targetPos.x, targetPos.z);
+        Vector3 pos = transform.position;
+        Vector3 targetPos = pos + dir;
+        UDObject targetobject = gameBoard.GetObject(targetPos.x, targetPos.z);
 
         //rotate always
         rotationComponent.Action(dir);
-        switch (targetType)
+        switch (targetobject.type)
         {
             case ge.ObjectType.NONE:
                 {
                     //move
                     if (moveComponent != null)
                     {
-                        moveComponent.Action(dir);
-                        gameBoard.Move(transform.position, targetPos, objectType);
+                        if (moveComponent.Check(dir))
+                        {
+                            gameBoard.Move(pos.x, pos.z, targetPos.x, targetPos.z);
+                            moveComponent.Action();
+                        }
                     }
                 }
                 break;
@@ -84,10 +54,10 @@ public class UDCharacterActionHandler : MonoBehaviour
             case ge.ObjectType.BLOCK:
                 {
                     //mining
-                    if (miningComponent != null)
-                    {
-                        miningComponent.Action(dir);
-                    }
+                    //if (miningComponent != null)
+                    //{
+                    //    miningComponent.Action(dir);
+                    //}
                 }
                 break;
             case ge.ObjectType.ENEMY:
@@ -95,13 +65,17 @@ public class UDCharacterActionHandler : MonoBehaviour
                     //attack
                     if (normalAttackComponent != null)
                     {
-                        normalAttackComponent.Action(dir);
+                        if (normalAttackComponent.Check())
+                        {
+                            normalAttackComponent.Action();
+                        }
                     }
                 }
                 break;
             case ge.ObjectType.PLAYER:
                 {
                     //to multiplay?
+
                 }
                 break;
             default:

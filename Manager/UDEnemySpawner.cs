@@ -26,8 +26,8 @@ public class UDEnemySpawner : MonoBehaviour
             {
                 int posX = CSVData.stageData[stageIdx].enemysPos[i].x;
                 int posZ = CSVData.stageData[stageIdx].enemysPos[i].y;
-                Instantiate(enemyPrefab, new Vector3(posX, fallHeight, posZ), Quaternion.identity);
-                UDEventManager.boardSetObjectDelegate(posX, posZ, ge.ObjectType.ENEMY);
+                GameObject go = Instantiate(enemyPrefab, new Vector3(posX, fallHeight, posZ), Quaternion.identity);
+                UDEventManager.boardSetObjectDelegate(posX, posZ, ge.ObjectType.ENEMY, go);
             }
             UDEventManager.enemySettingCompleteDelegate.Invoke();
         }

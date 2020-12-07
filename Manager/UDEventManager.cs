@@ -25,9 +25,11 @@ public class UDEventManager : MonoBehaviour
     static public VoidDelegate enemySettingCompleteDelegate;
 
     //GameBoard delegate
-    public delegate void BoardSetObjectDelegate(int posX, int posZ, ge.ObjectType type);
+    public delegate void BoardSetObjectDelegate(int posX, int posZ, ge.ObjectType type, GameObject go);
     static public BoardSetObjectDelegate boardSetObjectDelegate;
 
+    public delegate void XZDelegate(int posX, int posZ);
+    static public XZDelegate characterDeadDelegate;
     //TO DO
     static public VoidDelegate startGameDelegate;
 }

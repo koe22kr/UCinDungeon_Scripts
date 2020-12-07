@@ -19,7 +19,7 @@ public class UDCharacterRotationComponent : UDActionComponent
     {
     }
 
-    public override void Action(Vector3 dir)
+    public void Action(Vector3 dir)
     {
         transform.rotation = Quaternion.LookRotation(dir);
     }

@@ -54,7 +54,7 @@ public class UDBlock : MonoBehaviour
         posY = y;
         posZ = z;
         transform.position = new Vector3(posX, posY, posZ);
-        UDEventManager.boardSetObjectDelegate((int)x, (int)z, type);// x,z is x,y for gameboard.
+        UDEventManager.boardSetObjectDelegate((int)x, (int)z, type, this.gameObject);// x,z is x,y for gameboard.
     }
    
     public void SetColor(Color inColor)

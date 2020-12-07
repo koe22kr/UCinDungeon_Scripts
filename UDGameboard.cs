@@ -2,18 +2,38 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public struct UDObject
+{
+    public ge.ObjectType type;
+    public GameObject go;
+    public UDCharacterInfo info;
+    public UDObject(ge.ObjectType inType, GameObject inGo)
+    {
+        type = inType;
+        go = inGo;
+        info = inGo.GetComponent<UDCharacterInfo>();
+    }
+    public void Reset()
+    {
+        type = ge.ObjectType.NONE;
+        go = null;
+        info = null;
+    }
+
+}
+
 public class UDGameboard : MonoBehaviour
 {
 
     public int gameBoardWidth = 10;
     public int gameBoardHeight = 10;
-    private ge.ObjectType[,] gameBoard;
+    public UDObject[,] gameBoard;
 
     // Start is called before the first frame update
     void Start()
     {
         UDEventManager.boardSetObjectDelegate += SetObject;
-
+        UDEventManager.characterDeadDelegate += ResetObject;
         ResetBoard(gameBoardWidth, gameBoardHeight);
     }
 
@@ -30,7 +50,7 @@ public class UDGameboard : MonoBehaviour
         }
         return true;
     }
-    private ref ge.ObjectType GetObjectRef(int posX, int posZ)
+    private ref UDObject GetObjectRef(int posX, int posZ)
     {
         int idxX = posX - 1;
         int idxZ = posZ - 1;
@@ -42,7 +62,7 @@ public class UDGameboard : MonoBehaviour
     {
         if (CheckGameBoard(posX,posZ))
         {
-            GetObjectRef(posX,posZ) = ge.ObjectType.NONE;
+            GetObjectRef(posX, posZ).Reset();
         }
     }
     private void ResetObject(float posX, float posZ)
@@ -51,55 +71,58 @@ public class UDGameboard : MonoBehaviour
         int intposZ = (int)posZ;
         if (CheckGameBoard(intPosX, intposZ))
         {
-            GetObjectRef(intPosX, intposZ) = ge.ObjectType.NONE;
+            GetObjectRef(intPosX, intposZ).Reset();
         }
     }
 
-    private void SetObject(int posX, int posZ, ge.ObjectType type)
+    private void Swap(int lhsX, int lhsZ, int rhsX, int rhsZ)
+    {
+        if (CheckGameBoard(lhsX, lhsZ) && CheckGameBoard(rhsX, rhsZ))
+        {
+            UDObject temp = GetObjectRef(lhsX, lhsZ);
+            GetObjectRef(lhsX, lhsZ) = GetObjectRef(rhsX, rhsZ);
+            GetObjectRef(rhsX, rhsZ) = temp;
+        }
+       
+    }
+    private void Swap(float lhsX, float lhsZ, float rhsX, float rhsZ)
+    {
+        Swap((int)lhsX, (int)lhsZ, (int)rhsX, (int)rhsZ);
+    }
+    private void SetObject(int posX, int posZ, ge.ObjectType type, GameObject go)
     {
         if (CheckGameBoard(posX, posZ))
         {
-            GetObjectRef(posX, posZ) = type;
+            GetObjectRef(posX, posZ) = new UDObject(type, go);
         }
     }
-    private void SetObject(float posX, float posZ, ge.ObjectType type)
+    private void SetObject(float posX, float posZ, ge.ObjectType type, GameObject go)
     {
-        int intPosX = (int)posX;
-        int intposZ = (int)posZ;
-        if (CheckGameBoard(intPosX, intposZ))
-        {
-            GetObjectRef(intPosX, intposZ) = type;
-        }
+        SetObject((int)posX, (int)posZ, type, go);
     }
 
 
-    public ge.ObjectType GetObjectType(int posX,int posZ)
+    public UDObject GetObject(int posX,int posZ)
     {
         if (CheckGameBoard(posX, posZ))
         {
             return GetObjectRef(posX, posZ);
         }
-        return ge.ObjectType.NONE;
+        return new UDObject();
     }
 
-    public ge.ObjectType GetObjectType(float posX, float posZ)
+    public UDObject GetObject(float posX, float posZ)
     {
-        int intPosX = (int)posX;
-        int intposZ = (int)posZ;
-        if (CheckGameBoard(intPosX, intposZ))
-        {
-            return GetObjectRef(intPosX, intposZ);
-        }
-        return ge.ObjectType.NONE;
+        return GetObject((int)posX, (int)posZ);
     }
 
     private void ResetBoard()
     {
-        for (int y = 0; y < gameBoardHeight; y++)
+        for (int z = 0; z < gameBoardHeight; z++)
         {
             for (int x = 0; x < gameBoardWidth; x++)
             {
-                gameBoard[y, x] = ge.ObjectType.NONE;
+                gameBoard[z, x].Reset();
             }
         }
     }
@@ -108,13 +131,52 @@ public class UDGameboard : MonoBehaviour
     {
         gameBoardWidth = width;
         gameBoardHeight = height;
-        gameBoard = new ge.ObjectType[gameBoardWidth, gameBoardHeight];
+        gameBoard = new UDObject[gameBoardWidth, gameBoardHeight];
         ResetBoard();
     }
 
-    public void Move(Vector3 ownerPos, Vector3 targetPos, ge.ObjectType type)
+    public void Move(float currentX, float currentZ, float targetX, float targetZ)
     {
-        ResetObject(ownerPos.x, ownerPos.z);
-        SetObject(targetPos.x, targetPos.z, type);
+        Swap(currentX, currentZ, targetX, targetZ);
+    }
+    public void Move(int currentX, int currentZ, int targetX, int targetZ)
+    {
+        Swap(currentX, currentZ, targetX, targetZ);
+    }
+
+    public void Attack(float ownerX, float ownerZ, float targetX, float targetZ)
+    {
+        int ownerAttack = GetObject(ownerX, ownerZ).info.attack;
+        GetObject(targetX, targetZ).info.TakeDamage(ownerAttack);
+    }
+
+    public bool IsDamageAble(float posX, float posZ)
+    {
+        ge.ObjectType targetType = GetObject(posX, posZ).type;
+        if (ge.ObjectType.DAMAGEABLE < targetType
+            && targetType < ge.ObjectType.NUM)
+        {
+            return true;
+        }
+        return false;
+    }
+    public bool IsPlayer(float posX, float posZ)
+    {
+        ge.ObjectType targetType = GetObject(posX, posZ).type;
+        if (ge.ObjectType.PLAYER == targetType)            
+        {
+            return true;
+        }
+        return false;
+    }
+    public bool IsNotWallAndBlock(float posX, float posZ)
+    {
+        ge.ObjectType targetType = GetObject(posX, posZ).type;
+        if (ge.ObjectType.WALL == targetType
+            ||ge.ObjectType.BLOCK == targetType)
+        {
+            return false;
+        }
+        return true;
     }
 }

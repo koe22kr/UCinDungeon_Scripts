@@ -16,7 +16,7 @@ public class UDBlockManager : MonoBehaviour
     public List<UDBlock> walls;
     public List<UDBlock> exits;
 
- 
+    public Transform parentOfBlocks;
     // Start is called before the first frame update
     void Start()
     {
@@ -24,7 +24,7 @@ public class UDBlockManager : MonoBehaviour
 
         for (int i = 0; i < MAX_BLOCK_NUMBER; i++)
         {
-            UDBlock temp = GameObject.Instantiate(blockPrefab).GetComponent<UDBlock>();
+            UDBlock temp = GameObject.Instantiate(blockPrefab, parentOfBlocks).GetComponent<UDBlock>();
             if (temp != null)
             {
                 blocks.Add(temp);
@@ -32,7 +32,7 @@ public class UDBlockManager : MonoBehaviour
         }
         for (int i = 0; i < WALL_BLOCK_NUMBER; i++)
         {
-            UDBlock temp = GameObject.Instantiate(blockPrefab).GetComponent<UDBlock>();
+            UDBlock temp = GameObject.Instantiate(blockPrefab, parentOfBlocks).GetComponent<UDBlock>();
             if (temp != null)
             {
                 temp.SetDestructible(false);
