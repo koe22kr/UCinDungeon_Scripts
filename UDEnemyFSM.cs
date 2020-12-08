@@ -26,13 +26,7 @@ public class UDEnemyFSM : MonoBehaviour
         {
             CheckFSM();
         }
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            Action();
-        }
-
     }
-    
     private void CheckFSM()
     {
         //현 fsm의  상태가 3가지 이고 모든 상태들이 상호 전환 가능해서 if elseif else 로도 끝낼 수 있지만 추가될 것을 고려해서 이렇게 배치.
@@ -43,10 +37,12 @@ public class UDEnemyFSM : MonoBehaviour
                     if (attackComponent.Check())
                     {
                         currentState = ge.ActionType.ATTACK;
+                        attackComponent.Action();
                     }
                     else if (traceComponent.Check())
                     {
                         currentState = ge.ActionType.TRACE;
+                        traceComponent.Action();
                     }
                     else
                     {
@@ -59,10 +55,12 @@ public class UDEnemyFSM : MonoBehaviour
                     if (attackComponent.Check())
                     {
                         currentState = ge.ActionType.ATTACK;
+                        attackComponent.Action();
                     }
                     else if (traceComponent.Check())
                     {
                         currentState = ge.ActionType.TRACE;
+                        traceComponent.Action();
                     }
                     else 
                     {
@@ -75,10 +73,12 @@ public class UDEnemyFSM : MonoBehaviour
                     if (attackComponent.Check())
                     {
                         currentState = ge.ActionType.ATTACK;
+                        attackComponent.Action();
                     }
                     else if (traceComponent.Check())
                     {
                         currentState = ge.ActionType.TRACE;
+                        traceComponent.Action();
                     }
                     else
                     {
@@ -103,14 +103,14 @@ public class UDEnemyFSM : MonoBehaviour
                 break;
             case ge.ActionType.ATTACK:
                 {
-                    attackComponent.Action();
+                  //  attackComponent.Action();
                 }
                 break;
             case ge.ActionType.MINING:
                 break;
             case ge.ActionType.TRACE:
                 {
-                    traceComponent.Action();
+                 //   traceComponent.Action();
                 }
                 break;
             default:

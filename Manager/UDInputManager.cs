@@ -24,7 +24,7 @@ public class UDInputManager : MonoBehaviour
     void MoveInput()
     {
 
-        if (Input.GetButton("Vertical"))
+        if (Input.GetButtonDown("Vertical"))
         {
             if (0 < Input.GetAxis("Vertical"))
             {
@@ -37,7 +37,7 @@ public class UDInputManager : MonoBehaviour
                 CallMoveInputDelegate();
             }
         }
-        else if (Input.GetButton("Horizontal"))
+        else if (Input.GetButtonDown("Horizontal"))
         {
             if (0 < Input.GetAxis("Horizontal"))
             {
@@ -58,7 +58,7 @@ public class UDInputManager : MonoBehaviour
     void CallMoveInputDelegate()
     {
 
-        UDEventManager.moveActionDelegate.Invoke(moveDir);
+        UDEventManager.playerActionDelegate.Invoke(moveDir);
     }
     
 }

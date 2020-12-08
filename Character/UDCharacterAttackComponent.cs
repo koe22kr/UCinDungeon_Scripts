@@ -40,15 +40,36 @@ public class UDCharacterAttackComponent : UDActionComponent
 
     public bool Check()
     {
-        targets.Clear();
         Debug.Log("FSM_Attack_Check");
-        isAttackOn = false;
-        //공격,
         Vector3 pos = transform.position;
         Vector3 forward = transform.rotation * Vector3.forward;
         Vector3 right = transform.rotation * Vector3.right;
+        Vector3 left = transform.rotation * Vector3.left;
+        Vector3 back = transform.rotation * Vector3.back;
         forward.y = 0;
 
+        if (CheckForward(pos, forward, right))
+        {
+            return true;
+        }
+        else if (CheckForward(pos, right, back))
+        {
+            return true;
+        }
+        else if (CheckForward(pos, back, left))
+        {
+            return true;
+        }
+        else if (CheckForward(pos, left, forward))
+        {
+            return true;
+        }
+
+        return false;
+    }
+    private bool CheckForward(Vector3 pos, Vector3 forward,Vector3 right)
+    {
+        targets.Clear();
         Vector3 StartPos = pos + forward;
         for (int z = 0; z < attackRange; z++)
         {
@@ -74,13 +95,13 @@ public class UDCharacterAttackComponent : UDActionComponent
                         targets.Add(new Vector2(attackPos.x, attackPos.z));
                         if (gameBoard.IsPlayer(attackPos.x, attackPos.z))
                         {
-                            isAttackOn = true;
+                            transform.rotation = Quaternion.LookRotation(forward);
+                            return true;
                         }
                     }
                 }
             }
         }
-
-        return isAttackOn;
+        return false;
     }
 }

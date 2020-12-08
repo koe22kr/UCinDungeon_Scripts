@@ -13,8 +13,6 @@ public class UDCharacterMoveComponent : UDActionComponent
     private float elapsedTime;
 
     //
-    public float inputDisableTime = 0.3f;
-    private float lastInputTime = 0;
     //
 
     private void Awake()
@@ -73,17 +71,15 @@ public class UDCharacterMoveComponent : UDActionComponent
     public void Action()
     {
         isMoving = true;
-        lastInputTime = Time.time;
         UDEventManager.moveStartDelegate.Invoke();
         return;
     }
     public bool Check(Vector3 dir)
     {
-        if (dir == Vector3.zero || Time.time < lastInputTime + inputDisableTime)
+        if (dir == Vector3.zero)
         {
             return false;
         }
-
         if (isMoving)
         {
             nextMovingDir = dir;

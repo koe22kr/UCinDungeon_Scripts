@@ -11,11 +11,14 @@ public class UDCharacterActionHandler : MonoBehaviour
     public UDCharacterMoveComponent moveComponent;
     public UDCharacterRotationComponent rotationComponent;
 
+    bool isOnTurn = true;
     // Start is called before the first frame update
     void Start()
     {
         gameBoard = FindObjectOfType<UDGameboard>();
-        UDEventManager.moveActionDelegate += CheckMoveAction;
+        UDEventManager.playerActionDelegate += PlayerAction;
+        UDEventManager.actionHandlerStartDelegate += SetTurnOn;
+        UDEventManager.actionHandlerFinishDelegate += SetTurnOff;
     }
 
     // Update is called once per frame
@@ -23,11 +26,25 @@ public class UDCharacterActionHandler : MonoBehaviour
     {
     }
 
-    private void CheckMoveAction(Vector3 dir)
+    private void SetTurnOn()
+    {
+        isOnTurn = true;
+    }
+    private void SetTurnOff()
+    {
+        isOnTurn = false;
+    }
+
+    private void PlayerAction(Vector3 dir)
     {
         Vector3 pos = transform.position;
         Vector3 targetPos = pos + dir;
         UDObject targetobject = gameBoard.GetObject(targetPos.x, targetPos.z);
+
+        if (!isOnTurn)
+        {
+            return;
+        }
 
         //rotate always
         rotationComponent.Action(dir);
@@ -42,6 +59,7 @@ public class UDCharacterActionHandler : MonoBehaviour
                         {
                             gameBoard.Move(pos.x, pos.z, targetPos.x, targetPos.z);
                             moveComponent.Action();
+                            UDEventManager.actionHandlerFinishDelegate.Invoke();
                         }
                     }
                 }
@@ -58,6 +76,7 @@ public class UDCharacterActionHandler : MonoBehaviour
                     //{
                     //    miningComponent.Action(dir);
                     //}
+
                 }
                 break;
             case ge.ObjectType.ENEMY:
@@ -68,6 +87,7 @@ public class UDCharacterActionHandler : MonoBehaviour
                         if (normalAttackComponent.Check())
                         {
                             normalAttackComponent.Action();
+                            UDEventManager.actionHandlerFinishDelegate.Invoke();
                         }
                     }
                 }
@@ -82,5 +102,4 @@ public class UDCharacterActionHandler : MonoBehaviour
                 break;
         }
     }
-
 }

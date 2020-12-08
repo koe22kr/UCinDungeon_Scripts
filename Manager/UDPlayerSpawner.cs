@@ -26,6 +26,7 @@ public class UDPlayerSpawner : MonoBehaviour
         {
             GameObject instant = Instantiate(playerPrefab, new Vector3(spawnPosX, fallHeight, spawnPosZ), Quaternion.identity);
             UDEventManager.boardSetObjectDelegate(spawnPosX, spawnPosZ, ge.ObjectType.PLAYER, instant);
+            UDEventManager.SetPlayerDelegate(instant);
             UDEventManager.playerSettingCompleteDelegate.Invoke();
 
         }

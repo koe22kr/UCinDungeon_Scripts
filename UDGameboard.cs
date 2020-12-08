@@ -19,21 +19,20 @@ public struct UDObject
         go = null;
         info = null;
     }
-
 }
 
 public class UDGameboard : MonoBehaviour
 {
-
     public int gameBoardWidth = 10;
     public int gameBoardHeight = 10;
     public UDObject[,] gameBoard;
-
+    public GameObject player;
     // Start is called before the first frame update
     void Start()
     {
         UDEventManager.boardSetObjectDelegate += SetObject;
         UDEventManager.characterDeadDelegate += ResetObject;
+        UDEventManager.SetPlayerDelegate += SetPlayer;
         ResetBoard(gameBoardWidth, gameBoardHeight);
     }
 
@@ -44,7 +43,7 @@ public class UDGameboard : MonoBehaviour
     }
     private bool CheckGameBoard(int posX, int posZ)
     {
-        if (gameBoardWidth < posX || gameBoardHeight < posZ)
+        if (gameBoardWidth < posX || gameBoardHeight < posZ || posX < 1 || posZ < 1) 
         {
             return false;
         }
@@ -160,6 +159,12 @@ public class UDGameboard : MonoBehaviour
         }
         return false;
     }
+
+    private void SetPlayer(GameObject go)
+    {
+        player = go;
+    }
+
     public bool IsPlayer(float posX, float posZ)
     {
         ge.ObjectType targetType = GetObject(posX, posZ).type;
@@ -179,4 +184,24 @@ public class UDGameboard : MonoBehaviour
         }
         return true;
     }
+    public bool IsNoneType(float posX, float posZ)
+    {
+        ge.ObjectType targetType = GetObject(posX, posZ).type;
+        if (ge.ObjectType.NONE == targetType)
+        {
+            return true;
+        }
+        return false;
+    }
+    public bool IsTraceType(int posX, int posZ)
+    {
+        ge.ObjectType targetType = GetObject(posX, posZ).type;
+        if (ge.ObjectType.NONE == targetType 
+            || ge.ObjectType.PLAYER == targetType) 
+        {
+            return true;
+        }
+        return false;
+    }
+
 }

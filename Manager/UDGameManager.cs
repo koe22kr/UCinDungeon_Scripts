@@ -10,7 +10,8 @@ public class UDGameManager : MonoBehaviour
     private bool isBlockSetComplete = false;
     private bool isPlayerSetComplete = false;
     private bool isEnemySetComplete = false;
-
+    private int playerActionCount = 0;
+    private int enemyActionCount = 0;
     private static int currentStageNumber = 1; //NotHaveTitle.... Must be Change.
 
     //return -1 when stagenum wrong.

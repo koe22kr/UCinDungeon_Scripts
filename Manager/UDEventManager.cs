@@ -6,9 +6,11 @@ public class UDEventManager : MonoBehaviour
 {
     public delegate void VoidDelegate();
 
-    //ActionComponent delegate
+    //ActionHandlerComponent delegate
     public delegate void ActionDelegate(Vector3 vec3);
-    static public ActionDelegate moveActionDelegate;
+    static public ActionDelegate playerActionDelegate;
+    static public VoidDelegate actionHandlerStartDelegate;
+    static public VoidDelegate actionHandlerFinishDelegate;
     //AnimationController delegate
     static public VoidDelegate moveStartDelegate;
     static public VoidDelegate moveEndDelegate;
@@ -27,7 +29,8 @@ public class UDEventManager : MonoBehaviour
     //GameBoard delegate
     public delegate void BoardSetObjectDelegate(int posX, int posZ, ge.ObjectType type, GameObject go);
     static public BoardSetObjectDelegate boardSetObjectDelegate;
-
+    public delegate void GameObjectDelegate(GameObject go);
+    static public GameObjectDelegate SetPlayerDelegate;
     public delegate void XZDelegate(int posX, int posZ);
     static public XZDelegate characterDeadDelegate;
     //TO DO
