@@ -18,7 +18,6 @@ public class UDCharacterRotationComponent : UDActionComponent
     void Update()
     {
     }
-
     public void Action(Vector3 dir)
     {
         transform.rotation = Quaternion.LookRotation(dir);

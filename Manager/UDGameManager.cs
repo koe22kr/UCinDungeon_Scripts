@@ -10,10 +10,9 @@ public class UDGameManager : MonoBehaviour
     private bool isBlockSetComplete = false;
     private bool isPlayerSetComplete = false;
     private bool isEnemySetComplete = false;
-    private int playerActionCount = 0;
-    private int enemyActionCount = 0;
+    
     private static int currentStageNumber = 1; //NotHaveTitle.... Must be Change.
-
+    public float phaseResetTime = 0.5f;
     //return -1 when stagenum wrong.
     public static int StageNum
     {
@@ -35,7 +34,7 @@ public class UDGameManager : MonoBehaviour
         UDEventManager.blockSettingCompleteDelegate += BlockSettingComplete;
         UDEventManager.playerSettingCompleteDelegate += PlayerSettingComplete;
         UDEventManager.enemySettingCompleteDelegate += EnemySettingComplete;
-
+        UDEventManager.actionHandlerFinishDelegate += ResetPhase;
     }
     
     // Update is called once per frame
@@ -57,6 +56,7 @@ public class UDGameManager : MonoBehaviour
         }
     }
 
+   
     private IEnumerator SettingCoroutine()
     {
         isBlockSetComplete = false;
@@ -85,6 +85,16 @@ public class UDGameManager : MonoBehaviour
         settingGameButton.SetActive(false);
     }
 
+    public void ResetPhase()
+    {
+        StartCoroutine(ResetPhaseCoroutine());
+    }
+
+    private IEnumerator ResetPhaseCoroutine()
+    {
+        yield return new WaitForSeconds(phaseResetTime);
+        UDEventManager.actionHandlerStartDelegate.Invoke();
+    }
     private void BlockSettingComplete()
     {
         isBlockSetComplete = true;

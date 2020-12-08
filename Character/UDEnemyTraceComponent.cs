@@ -19,7 +19,7 @@ class PathNode
     }
    
 }
-public class UDCharacterTraceComponent : UDActionComponent
+public class UDEnemyTraceComponent : UDActionComponent
 {
     
     private UDGameboard gameBoard;

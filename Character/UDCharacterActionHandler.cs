@@ -18,7 +18,6 @@ public class UDCharacterActionHandler : MonoBehaviour
         gameBoard = FindObjectOfType<UDGameboard>();
         UDEventManager.playerActionDelegate += PlayerAction;
         UDEventManager.actionHandlerStartDelegate += SetTurnOn;
-        UDEventManager.actionHandlerFinishDelegate += SetTurnOff;
     }
 
     // Update is called once per frame
@@ -30,8 +29,9 @@ public class UDCharacterActionHandler : MonoBehaviour
     {
         isOnTurn = true;
     }
-    private void SetTurnOff()
+    private void SetFinish()
     {
+        UDEventManager.actionHandlerFinishDelegate.Invoke();
         isOnTurn = false;
     }
 
@@ -59,7 +59,8 @@ public class UDCharacterActionHandler : MonoBehaviour
                         {
                             gameBoard.Move(pos.x, pos.z, targetPos.x, targetPos.z);
                             moveComponent.Action();
-                            UDEventManager.actionHandlerFinishDelegate.Invoke();
+                            
+                            SetFinish();
                         }
                     }
                 }
@@ -87,7 +88,7 @@ public class UDCharacterActionHandler : MonoBehaviour
                         if (normalAttackComponent.Check())
                         {
                             normalAttackComponent.Action();
-                            UDEventManager.actionHandlerFinishDelegate.Invoke();
+                            SetFinish();
                         }
                     }
                 }

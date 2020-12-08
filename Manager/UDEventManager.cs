@@ -5,7 +5,9 @@ using UnityEngine.Events;
 public class UDEventManager : MonoBehaviour
 {
     public delegate void VoidDelegate();
-
+    //InputManager
+    static public VoidDelegate OnInputDelegate;
+    static public VoidDelegate OffInputDelegate;
     //ActionHandlerComponent delegate
     public delegate void ActionDelegate(Vector3 vec3);
     static public ActionDelegate playerActionDelegate;

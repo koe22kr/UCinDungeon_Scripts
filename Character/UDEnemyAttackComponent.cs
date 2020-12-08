@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UDCharacterAttackComponent : UDActionComponent
+public class UDEnemyAttackComponent : UDActionComponent
 {
     private UDGameboard gameBoard;
     public int attackRange = 2;
@@ -43,16 +43,30 @@ public class UDCharacterAttackComponent : UDActionComponent
         Vector3 pos = transform.position;
         Vector3 forward = transform.rotation * Vector3.forward;
         Vector3 right = transform.rotation * Vector3.right;
+        Vector3 left = transform.rotation * Vector3.left;
+        Vector3 back = transform.rotation * Vector3.back;
         forward.y = 0;
 
         if (CheckForward(pos, forward, right))
         {
             return true;
         }
+        else if (CheckForward(pos, right, back))
+        {
+            return true;
+        }
+        else if (CheckForward(pos, back, left))
+        {
+            return true;
+        }
+        else if (CheckForward(pos, left, forward))
+        {
+            return true;
+        }
 
         return false;
     }
-    private bool CheckForward(Vector3 pos, Vector3 forward, Vector3 right)
+    private bool CheckForward(Vector3 pos, Vector3 forward,Vector3 right)
     {
         targets.Clear();
         Vector3 StartPos = pos + forward;
@@ -78,7 +92,11 @@ public class UDCharacterAttackComponent : UDActionComponent
                     {
                         //공 격
                         targets.Add(new Vector2(attackPos.x, attackPos.z));
+                        if (gameBoard.IsPlayer(attackPos.x, attackPos.z))
+                        {
+                            transform.rotation = Quaternion.LookRotation(forward);
                             return true;
+                        }
                     }
                 }
             }

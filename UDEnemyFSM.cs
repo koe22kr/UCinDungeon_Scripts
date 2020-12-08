@@ -6,8 +6,8 @@ public class UDEnemyFSM : MonoBehaviour
 {
    
     public ge.ActionType currentState;
-    public UDCharacterAttackComponent attackComponent;
-    public UDCharacterTraceComponent traceComponent;
+    public UDEnemyAttackComponent attackComponent;
+    public UDEnemyTraceComponent traceComponent;
     
 
     private void Awake()
@@ -17,6 +17,7 @@ public class UDEnemyFSM : MonoBehaviour
     void Start()
     {
         currentState = ge.ActionType.IDLE;
+        UDEventManager.actionHandlerFinishDelegate += CheckFSM;
     }
 
     // Update is called once per frame
@@ -95,27 +96,27 @@ public class UDEnemyFSM : MonoBehaviour
         Debug.Log("EnemyFSM.CheckFSM.currentState : " + currentState.ToString());
     }
 
-    private void Action()
-    {
-        switch (currentState)
-        {
-            case ge.ActionType.IDLE:
-                break;
-            case ge.ActionType.ATTACK:
-                {
-                  //  attackComponent.Action();
-                }
-                break;
-            case ge.ActionType.MINING:
-                break;
-            case ge.ActionType.TRACE:
-                {
-                 //   traceComponent.Action();
-                }
-                break;
-            default:
-                break;
-        }
-        Debug.Log("EnemyFSM.Action.currentState : " + currentState.ToString());
-    }
+    //private void Action()
+    //{
+    //    switch (currentState)
+    //    {
+    //        case ge.ActionType.IDLE:
+    //            break;
+    //        case ge.ActionType.ATTACK:
+    //            {
+    //              //  attackComponent.Action();
+    //            }
+    //            break;
+    //        case ge.ActionType.MINING:
+    //            break;
+    //        case ge.ActionType.TRACE:
+    //            {
+    //             //   traceComponent.Action();
+    //            }
+    //            break;
+    //        default:
+    //            break;
+    //    }
+    //    Debug.Log("EnemyFSM.Action.currentState : " + currentState.ToString());
+    //}
 }
