@@ -151,7 +151,6 @@ public class UDEnemyTraceComponent : UDActionComponent
                 }
                 if (gameBoard.IsNoneType(resultNode.posX,resultNode.posZ))
                 {
-                    Action();
                     return true;
                 }
             }

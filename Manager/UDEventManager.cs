@@ -35,6 +35,8 @@ public class UDEventManager : MonoBehaviour
     static public GameObjectDelegate SetPlayerDelegate;
     public delegate void XZDelegate(int posX, int posZ);
     static public XZDelegate characterDeadDelegate;
+
+
     //TO DO
     static public VoidDelegate startGameDelegate;
 }

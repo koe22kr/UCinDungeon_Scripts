@@ -29,6 +29,7 @@ public class UDEnemySpawner : MonoBehaviour
                 GameObject go = Instantiate(enemyPrefab, new Vector3(posX, fallHeight, posZ), Quaternion.identity);
                 UDEventManager.boardSetObjectDelegate(posX, posZ, ge.ObjectType.ENEMY, go);
             }
+
             UDEventManager.enemySettingCompleteDelegate.Invoke();
         }
     }
